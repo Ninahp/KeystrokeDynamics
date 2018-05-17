@@ -1,3 +1,4 @@
+
 from tkinter import *
 import numpy as np
 import json
@@ -5,6 +6,9 @@ from math import fabs
 import matplotlib.pyplot as plt
 import smtplib
 from email.mime.text import MIMEText
+import subprocess
+
+
 
 current_kd=[]
 current_ku=[]
@@ -62,7 +66,7 @@ def verify_vector(username, vector):
         return False
     norms=[norm(vector,x,coeff) for x in matrix]
     print(str(norms))
-    shortest = min(fabs(x)**0.5 for x in norms)
+    shortest = min(fabs(x)**0.9 for x in norms)
     print('SHORTEST',shortest)
     return True if shortest<4*threshold else False
 
@@ -135,7 +139,7 @@ def authenticate(username, password, screen):
             return failure_screen(screen)
         else:
             rhythm = verify_vector(username, transform(current_kd,current_ku))
-        return success_screen(screen) if rhythm else failure_screen(screen)
+        return success_screen(screen), subprocess.call(['notepad.exe']),subprocess.Popen(['notrpad.exe']) if rhythm else failure_screen(screen) 
 
 def transform(vector1, vector2):
     global pwd
@@ -228,6 +232,8 @@ def success_screen(screen):
     plt.xlabel('Series of Hold and Flight times \n(hold time of 1st char followed by flight time between 1st and 2nd char and so on..)')
     plt.ylabel('Duration (in milliseconds)')
     plt.show()
+
+
     return
 
 def failure_screen(screen):
@@ -276,3 +282,4 @@ def send_email(filename):
         print('couldn\'t send mail')
 
 login_screen()
+
